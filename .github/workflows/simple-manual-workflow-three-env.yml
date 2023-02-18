@@ -3,10 +3,9 @@
 name: Simple Manual Workflow - Three Envs
 
 # Controls when the workflow will run
+# Allows you to run this workflow manually from the Actions tab
 on:
   workflow_dispatch:
-
-  # Allows you to run this workflow manually from the Actions tab
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -22,10 +21,32 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Hello, world!
+        run: echo Hello, world! from the DEV environment
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      #- name: Run a multi-line script
+      #  run: |
+      #    echo Add other actions to build,
+      #    echo test, and deploy your project in the DEV environment
+
+    QA:
+      runs-on: ubuntu-latest
+      environment: QA
+      needs: DEV
+
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Run a one-line script
+          run: echo Hello, World! from the QA environment
+
+    PROD:
+      runs-on: ubuntu-latest
+      environment: PROD
+      needs: QA
+
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Run a one-line script
+          run: echo Hello, World! from the PROD environment
